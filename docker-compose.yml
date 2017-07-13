@@ -1,0 +1,58 @@
+version: '2'
+
+volumes:
+    cache:
+        driver: local
+        driver_opts:
+            type: tmpfs
+            device: tmpfs
+            o: uid=33
+    logs:
+        driver: local
+        driver_opts:
+            type: tmpfs
+            device: tmpfs
+            o: uid=33
+
+services:
+
+    root:
+        image: php:fpm
+        volumes:
+            - ./src/root:/var/www/root
+
+    site1:
+        image: php:fpm
+        volumes:
+            - ./src/site1:/var/www/site1
+
+    site2:
+        image: php:fpm
+        volumes:
+            - ./src/site2:/var/www/site2
+
+    site3:
+        image: php:fpm
+        volumes:
+            - ./src/site3:/var/www/site3
+
+    nginx:
+        image: nginx:latest
+        ports:
+            - "8080:80"
+        depends_on:
+            - root
+            - site1
+            - site2
+            - site3
+        volumes:
+            - ./etc/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+#            - ./etc/nginx/conf.d/root.conf:/etc/nginx/conf.d/root.conf
+#            - ./etc/nginx/conf.d/site1.conf:/etc/nginx/conf.d/site1.conf
+#            - ./etc/nginx/conf.d/site2.conf:/etc/nginx/conf.d/site2.conf
+#            - ./etc/nginx/conf.d/site3.conf:/etc/nginx/conf.d/site3.conf
+            - ./src/root:/var/www/root:ro
+            - ./src/site1:/var/www/site1:ro
+            - ./src/site2:/var/www/site2:ro
+            - ./src/site3:/var/www/site3:ro
+
