@@ -19,22 +19,22 @@ services:
     root:
         image: php:fpm
         volumes:
-            - ./src/root:/var/www/root
+            - ./src/root:/var/www/html
 
     site1:
         image: php:fpm
         volumes:
-            - ./src/site1:/var/www/site1
+            - ./src/site1:/var/www/html
 
     site2:
         image: php:fpm
         volumes:
-            - ./src/site2:/var/www/site2
+            - ./src/site2:/var/www/html
 
     site3:
         image: php:fpm
         volumes:
-            - ./src/site3:/var/www/site3
+            - ./src/site3:/var/www/html
 
     nginx:
         image: nginx:latest
@@ -47,12 +47,4 @@ services:
             - site3
         volumes:
             - ./etc/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
-#            - ./etc/nginx/conf.d/root.conf:/etc/nginx/conf.d/root.conf
-#            - ./etc/nginx/conf.d/site1.conf:/etc/nginx/conf.d/site1.conf
-#            - ./etc/nginx/conf.d/site2.conf:/etc/nginx/conf.d/site2.conf
-#            - ./etc/nginx/conf.d/site3.conf:/etc/nginx/conf.d/site3.conf
-            - ./src/root:/var/www/root:ro
-            - ./src/site1:/var/www/site1:ro
-            - ./src/site2:/var/www/site2:ro
-            - ./src/site3:/var/www/site3:ro
 
