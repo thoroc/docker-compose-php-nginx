@@ -17,24 +17,32 @@ volumes:
 services:
 
     website:
-        image: php:fpm
+        build:
+            context: .
+            dockerfile: ./etc/docker/website/Dockerfile
         volumes:
-            - ./src/website:/var/www/html
+            - ./src/website/public:/var/www/html
 
     site1-api:
-        image: php:fpm
+        build:
+            context: .
+            dockerfile: ./etc/docker/website/Dockerfile
         volumes:
-            - ./src/site1-api:/var/www/html
+            - ./src/site1-api/public:/var/www/html
 
     site2-api:
-        image: php:fpm
+        build:
+            context: .
+            dockerfile: ./etc/docker/website/Dockerfile
         volumes:
-            - ./src/site2-api:/var/www/html
+            - ./src/site2-api/public:/var/www/html
 
     site3-api:
-        image: php:fpm
+        build:
+            context: .
+            dockerfile: ./etc/docker/website/Dockerfile
         volumes:
-            - ./src/site3-api:/var/www/html
+            - ./src/site3-api/public:/var/www/html
 
     nginx:
         image: nginx:latest
