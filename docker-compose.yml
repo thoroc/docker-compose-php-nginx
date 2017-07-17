@@ -16,35 +16,35 @@ volumes:
 
 services:
 
-    root:
+    website:
         image: php:fpm
         volumes:
-            - ./src/root:/var/www/html
+            - ./src/website:/var/www/html
 
-    site1:
+    site1-api:
         image: php:fpm
         volumes:
-            - ./src/site1:/var/www/html
+            - ./src/site1-api:/var/www/html
 
-    site2:
+    site2-api:
         image: php:fpm
         volumes:
-            - ./src/site2:/var/www/html
+            - ./src/site2-api:/var/www/html
 
-    site3:
+    site3-api:
         image: php:fpm
         volumes:
-            - ./src/site3:/var/www/html
+            - ./src/site3-api:/var/www/html
 
     nginx:
         image: nginx:latest
         ports:
             - "8080:80"
         depends_on:
-            - root
-            - site1
-            - site2
-            - site3
+            - website
+            - site1-api
+            - site2-api
+            - site3-api
         volumes:
             - ./etc/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
 
