@@ -3,6 +3,7 @@
 IMAGE_NAME ?= docker-php-api
 VERSION ?= latest
 
+.PHONY: help build dev stop
 .DEFAULT_GOAL := help
 
 # tasks
@@ -20,9 +21,14 @@ ifneq "$(SUPPORTS_MAKE_ARGS)" ""
 endif
 
 build: ## Build Docker Image
-	@echo "Building docker image: [$(COMMAND_ARGS)]"
 	docker build -t $(IMAGE_NAME)/$(VERSION) -f etc/docker/$(COMMAND_ARGS)/Dockerfile .
 
 dev: ## Run project in dev mode
-	@echo "Running project [$(COMMAND_ARGS)] in dev mode"
-	docker-compose up -d $(COMMAND_ARGS)
+ifeq ($(COMMAND_ARGS),)
+	@docker-compose up
+else
+	@docker-compose up -d $(COMMAND_ARGS)
+endif
+
+stop: ## Stop all Docker Containers and remove Volumes
+	@docker-compose down -v
