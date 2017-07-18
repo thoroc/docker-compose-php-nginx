@@ -4,22 +4,25 @@ IMAGE_NAME ?= docker-php-api
 VERSION ?= latest
 
 .DEFAULT_GOAL := help
-.PHONY: help build build_website build_site1-api build_site2-api build_site3-api
 
 # tasks
 help: ## Displays list and descriptions of available targets
 	@awk -F ':|\#\#' '/^[^\t].+:.*\#\#/ {printf "\033[36m%-30s\033[0m %s\n", $$1, $$NF }' $(MAKEFILE_LIST) | sort
 
-build: build_website build_site1-api build_site2-api build_site3-api ## Build all Docker images
+# If the first argument is one of the supported commands...
+SUPPORTED_COMMANDS := build dev
+SUPPORTS_MAKE_ARGS := $(findstring $(firstword $(MAKECMDGOALS)), $(SUPPORTED_COMMANDS))
+ifneq "$(SUPPORTS_MAKE_ARGS)" ""
+  # use the rest as arguments for the command
+  COMMAND_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  # ...and turn them into do-nothing targets
+  $(eval $(COMMAND_ARGS):;@:)
+endif
 
-build_website: ## Build website Docker image
-	docker build -t $(IMAGE_NAME)/$(VERSION) -f etc/docker/website/Dockerfile .
+build: ## Build Docker Image
+	@echo "Building docker image: [$(COMMAND_ARGS)]"
+	docker build -t $(IMAGE_NAME)/$(VERSION) -f etc/docker/$(COMMAND_ARGS)/Dockerfile .
 
-build_site1-api: ## Build site1-api Docker image
-	docker build -t $(IMAGE_NAME)/$(VERSION) -f etc/docker/site1-api/Dockerfile .
-
-build_site2-api: ## Build site2-api Docker image
-	docker build -t $(IMAGE_NAME)/$(VERSION) -f etc/docker/site2-api/Dockerfile .
-
-build_site3-api: ## Build site3-api Docker image
-	docker build -t $(IMAGE_NAME)/$(VERSION) -f etc/docker/site3-api/Dockerfile .
+dev: ## Run project in dev mode
+	@echo "Running project [$(COMMAND_ARGS)] in dev mode"
+	docker-compose up -d $(COMMAND_ARGS)
