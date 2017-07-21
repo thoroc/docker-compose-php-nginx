@@ -160,5 +160,5 @@ composer.phar
 .hgsubstate
 .hgtags
 
-./src/vendor
+src/vendor
 
