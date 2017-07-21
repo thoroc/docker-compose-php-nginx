@@ -1,0 +1,13 @@
+{
+    "name": "imbc/docker-php",
+    "description": "mocking about with docker, nginx and fpm-php",
+    "type": "pos",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Thomas Roche",
+            "email": "thomas.roche@postcodelottery.co.uk"
+        }
+    ],
+    "require": {}
+}

@@ -22,7 +22,7 @@ help: ## Displays list and descriptions of available targets
 	@awk -F ':|\#\#' '/^[^\t].+:.*\#\#/ {printf "\033[36m%-30s\033[0m %s\n", $$1, $$NF }' $(MAKEFILE_LIST) | sort
 
 # If the first argument is one of the supported commands...
-SUPPORTED_COMMANDS := build dev
+SUPPORTED_COMMANDS := build dev composer
 SUPPORTS_MAKE_ARGS := $(findstring $(firstword $(MAKECMDGOALS)), $(SUPPORTED_COMMANDS))
 ifneq "$(SUPPORTS_MAKE_ARGS)" ""
     # use the rest as arguments for the command
@@ -45,7 +45,7 @@ stop: ## Stop all Docker Containers and remove Volumes
 	@docker-compose down -v
 
 composer: ## Composer - PHP dependencies management
-	@mkdir -p $(COMPOSER_CACHE_DIR)
-	@docker run -ti --rm=true \
-		-v config.json:/composer/config.json \
-		/usr/local/bin/composer $(COMMAND_ARGS)
+	@docker run --rm --interactive --tty \
+		--volume $PWD:/app \
+		--user $(id -u):$(id -g) \
+		composer $(COMMAND_ARGS)
