@@ -2,6 +2,9 @@ FROM php:7.0-fpm-alpine
 
 COPY src/website/public /var/www/html
 
+RUN rm -rf /var/www/html/logs/* \
+    && chown -R www-data:www-data /var/www/html
+
 # installing composer
 RUN curl -o /tmp/composer-setup.php https://getcomposer.org/installer \
 && curl -o /tmp/composer-setup.sig https://composer.github.io/installer.sig \

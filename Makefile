@@ -1,7 +1,18 @@
 # variables
 #UNAME_S := $(shell uname -s)
+INTERACTIVE:=$(shell [ -t 0 ] && echo 1)
 IMAGE_NAME ?= docker-php-api
 VERSION ?= latest
+
+COMPOSER_CACHE_DIR = /var/tmp/composer
+
+ifeq ($(COMPOSER_USE_INSTALL_FLAGS), 1)
+    COMPOSER_INSTALL_FLAGS=--no-scripts --ignore-platform-reqs
+endif
+
+ifeq ($(INTERACTIVE), 1)
+    DOCKER_INTERACTIVE_FLAG=-i
+endif
 
 .PHONY: help build dev stop
 .DEFAULT_GOAL := help
@@ -14,10 +25,10 @@ help: ## Displays list and descriptions of available targets
 SUPPORTED_COMMANDS := build dev
 SUPPORTS_MAKE_ARGS := $(findstring $(firstword $(MAKECMDGOALS)), $(SUPPORTED_COMMANDS))
 ifneq "$(SUPPORTS_MAKE_ARGS)" ""
-  # use the rest as arguments for the command
-  COMMAND_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
-  # ...and turn them into do-nothing targets
-  $(eval $(COMMAND_ARGS):;@:)
+    # use the rest as arguments for the command
+    COMMAND_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+    # ...and turn them into do-nothing targets
+    $(eval $(COMMAND_ARGS):;@:)
 endif
 
 build: ## Build Docker Image
@@ -32,3 +43,9 @@ endif
 
 stop: ## Stop all Docker Containers and remove Volumes
 	@docker-compose down -v
+
+composer: ## Composer - PHP dependencies management
+	@mkdir -p $(COMPOSER_CACHE_DIR)
+	@docker run -ti --rm=true \
+		-v config.json:/composer/config.json \
+		/usr/local/bin/composer $(COMMAND_ARGS)

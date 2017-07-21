@@ -26,21 +26,21 @@ services:
     site1-api:
         build:
             context: .
-            dockerfile: ./etc/docker/website/Dockerfile
+            dockerfile: ./etc/docker/site1-api/Dockerfile
         volumes:
             - ./src/site1-api/public:/var/www/html
 
     site2-api:
         build:
             context: .
-            dockerfile: ./etc/docker/website/Dockerfile
+            dockerfile: ./etc/docker/site2-api/Dockerfile
         volumes:
             - ./src/site2-api/public:/var/www/html
 
     site3-api:
         build:
             context: .
-            dockerfile: ./etc/docker/website/Dockerfile
+            dockerfile: ./etc/docker/site3-api/Dockerfile
         volumes:
             - ./src/site3-api/public:/var/www/html
 
