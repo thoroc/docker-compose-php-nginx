@@ -46,6 +46,6 @@ stop: ## Stop all Docker Containers and remove Volumes
 
 composer: ## Composer - PHP dependencies management
 	@docker run --rm --interactive --tty \
-		--volume $PWD:/app \
+		--volume $(PWD)/src:/app \
 		--user $(id -u):$(id -g) \
 		composer $(COMMAND_ARGS)

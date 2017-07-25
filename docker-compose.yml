@@ -17,8 +17,11 @@ volumes:
 services:
 
     website:
-        image: php:7.0-fpm-alpine
+        build:
+            dockerfile: /etc/docker/Dockerfile
+            context: .
         volumes:
+            - ./opt/php/dev/php.ini:/usr/local/etc/php/php.ini:ro
             - ./src:/var/www/html
 
     nginx:
